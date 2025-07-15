@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Mapa con Leaflet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- CSS de Leaflet -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-sA+SkQXG9CJyW6zWGyXszA6KNGPnnI5LB+H4gO4p4lg="
+    crossorigin=""
+  />
+  
+  <!-- JS de Leaflet -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-o0zi9TFLieRcih2vRPO98c70dhW6xoGf+jmw5/sAdhc="
+    crossorigin=""
+  ></script>
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script>
+    // Inicializa el mapa centrado en Madrid
+    const map = L.map('map').setView([40.4168, -3.7038], 13);
+
+    // Carga las capas de OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Añade un marcador
+    L.marker([40.4168, -3.7038])
+      .addTo(map)
+      .bindPopup('¡Hola desde Madrid!')
+      .openPopup();
+  </script>
+</body>
+</html>
