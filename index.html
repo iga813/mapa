@@ -1,44 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8"/>
   <title>Geo + Velocidad</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>body { font-family: Arial, sans-serif; }</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <style>body{font-family:Arial,sans-serif;margin:10px;}#info{white-space:pre-line;}</style>
 </head>
 <body>
-  <h2>Ubicación y Velocidad en tiempo real</h2>
+  <h2>Geo + Velocidad en tiempo real</h2>
   <p id="info">Esperando ubicación...</p>
-
   <script>
     function sendDataToApp(lat, lon, speed) {
-      // Cambia la URL para enviar datos a Thunkable (puedes modificar el esquema si quieres)
       const newUrl = `https://myapp/speed?lat=${lat}&lon=${lon}&speed=${speed}`;
       window.location.href = newUrl;
     }
-
     if (navigator.geolocation) {
       navigator.geolocation.watchPosition(
-        (pos) => {
+        pos => {
           const lat = pos.coords.latitude.toFixed(6);
           const lon = pos.coords.longitude.toFixed(6);
           let speed = pos.coords.speed;
           if (speed === null) speed = 0;
-          speed = (speed * 3.6).toFixed(1); // Convertir m/s a km/h
-
+          speed = (speed * 3.6).toFixed(1);
           document.getElementById('info').innerText =
-            `Latitud: ${lat}, Longitud: ${lon}, Velocidad: ${speed} km/h`;
-
+            `Latitud: ${lat}\nLongitud: ${lon}\nVelocidad: ${speed} km/h`;
           sendDataToApp(lat, lon, speed);
         },
-        (error) => {
+        err => {
           document.getElementById('info').innerText =
-            'Error obteniendo ubicación: ' + error.message;
+            'Error: ' + err.message;
         },
         { enableHighAccuracy: true, maximumAge: 1000 }
       );
     } else {
-      document.getElementById('info').innerText = 'Geolocalización no soportada.';
+      document.getElementById('info').innerText =
+        'Geolocalización no soportada';
     }
   </script>
 </body>
