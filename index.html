@@ -1,41 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8"/>
-  <title>Geo + Velocidad</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <style>body{font-family:Arial,sans-serif;margin:10px;}#info{white-space:pre-line;}</style>
+  <meta charset="utf-8">
+  <title>Mapa con ubicación</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    #info { white-space: pre-line; }
+  </style>
 </head>
 <body>
-  <h2>Geo + Velocidad en tiempo real</h2>
-  <p id="info">Esperando ubicación...</p>
+  <h2>Ubicación actual:</h2>
+  <p id="info">Esperando datos de ubicación...</p>
+
   <script>
-    function sendDataToApp(lat, lon, speed) {
-      const newUrl = `https://myapp/speed?lat=${lat}&lon=${lon}&speed=${speed}`;
-      window.location.href = newUrl;
+    function sendToThunkable(lat, lon, speed) {
+      // Usamos esta URL ficticia para que Thunkable pueda leerla
+      const nuevaURL = `https://app/speed?lat=${lat}&lon=${lon}&speed=${speed}`;
+      window.location.href = nuevaURL;
     }
-    if (navigator.geolocation) {
+
+    if ('geolocation' in navigator) {
       navigator.geolocation.watchPosition(
-        pos => {
-          const lat = pos.coords.latitude.toFixed(6);
-          const lon = pos.coords.longitude.toFixed(6);
-          let speed = pos.coords.speed;
+        (position) => {
+          const lat = position.coords.latitude.toFixed(6);
+          const lon = position.coords.longitude.toFixed(6);
+          let speed = position.coords.speed;
           if (speed === null) speed = 0;
-          speed = (speed * 3.6).toFixed(1);
-          document.getElementById('info').innerText =
+          speed = (speed * 3.6).toFixed(1); // m/s → km/h
+
+          document.getElementById('info').innerText = 
             `Latitud: ${lat}\nLongitud: ${lon}\nVelocidad: ${speed} km/h`;
-          sendDataToApp(lat, lon, speed);
+
+          sendToThunkable(lat, lon, speed);
         },
-        err => {
-          document.getElementById('info').innerText =
+        (err) => {
+          document.getElementById('info').innerText = 
             'Error: ' + err.message;
         },
         { enableHighAccuracy: true, maximumAge: 1000 }
       );
     } else {
-      document.getElementById('info').innerText =
-        'Geolocalización no soportada';
+      document.getElementById('info').innerText = 
+        'Tu navegador no soporta geolocalización.';
     }
   </script>
 </body>
 </html>
+
